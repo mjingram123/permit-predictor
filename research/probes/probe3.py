@@ -17,7 +17,6 @@ print("\nnever-issued rows filed 2010-2018: days from filing to last status chan
 x = b2[b2.era=="2010-18"]; dd = (pd.to_datetime(x.status_date)-x["sub"]).dt.days
 print(dd.describe(percentiles=[.25,.5,.75,.9]).round(0).to_dict())
 print("\nPC-only rows: n", b.pc_only.sum(), "issued share", b[b.pc_only].issued.mean().round(3))
-# does a PC-only row have a sibling on the same APN?
 b = b.sort_values(["apn","sub"])
 pc = b[b.pc_only & b.apn.notna()]
 others = b[~b.pc_only & b.apn.notna()]
