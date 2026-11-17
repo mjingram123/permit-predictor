@@ -23,7 +23,7 @@ zip_table = projects[projects.zip5.str.len() == 5].groupby("zip5").agg(
 citywide = {"lat": projects.lat.median(), "lon": projects.lon.median(), "council_district": most_common(projects.council_district), "planning_area": most_common(projects.planning_area), "zone_base": most_common(projects.zone_base)}
 
 
-def describe_project(asset_class, valuation, stories, units, floor_area, buildings_filed, zip_code, zone, ticked):
+def describe_project(building_type, valuation, stories, units, floor_area, buildings_filed, zip_code, zone, ticked):
     place = zip_table.loc[zip_code].to_dict() if zip_code in zip_table.index else dict(citywide)
     row = {name: 0.0 for name in NUMBERS}
     row.update({
@@ -39,7 +39,7 @@ def describe_project(asset_class, valuation, stories, units, floor_area, buildin
         "electronic_plans": uses_electronic_plans,
         "recent_quick_share": todays_pace["recent_quick_share"],
         "recent_typical_wait": todays_pace["recent_typical_wait"],
-        "asset_class": asset_class,
+        "building_type": building_type,
         "zone_base": place["zone_base"] if zone == "Typical for the ZIP code" else zone,
         "council_district": place["council_district"],
         "planning_area": place["planning_area"],
@@ -51,12 +51,12 @@ def describe_project(asset_class, valuation, stories, units, floor_area, buildin
 
 def blended_curve(row):
     model_curve = permit_curves(final_model, row)[0]
-    record_curve = todays_track_record[row.asset_class.iloc[0]]
+    record_curve = todays_track_record[row.building_type.iloc[0]]
     return (model_curve + record_curve) / 2, model_curve, record_curve
 
 
 def similar_projects(row, how_many=25):
-    pool = projects[(projects.asset_class == row.asset_class.iloc[0]) & (projects.filed >= DATA_DATE - pd.Timedelta(days=8 * 365)) & projects.valuation.notna()]
+    pool = projects[(projects.building_type == row.building_type.iloc[0]) & (projects.filed >= DATA_DATE - pd.Timedelta(days=8 * 365)) & projects.valuation.notna()]
     target_value = row.valuation.iloc[0] if pd.notna(row.valuation.iloc[0]) else pool.valuation.median()
     distance = (np.log(pool.valuation) - np.log(target_value)).abs()
     for name in ["units", "stories"]:

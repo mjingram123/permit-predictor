@@ -1,5 +1,5 @@
 One test period can be luck. We repeat the whole exercise for four separate periods, each time training only on what was known before the test projects were filed. The report card below shows, for each period:
 
-- the error of the track record and of the blend for "permit within 24 months" (lower is better),
+- the odds error of the track record and of the blend for "permit within 24 months" (lower is better),
 - the ranking score of each,
-- how often the real wait fell inside the blend's date ranges. A range built to hold 80% of projects should hold about 80% of them, and the 50% range about 50%.
+- how often the real wait fell inside the blend's date ranges. The **80% range** runs from the month by which the fastest 10% of permits should have arrived to the month by which 90% should have. The **50% range** runs from the 25% mark to the 75% mark; these are the "optimistic" and "pessimistic" months the tool prints. A range built to hold 80% of projects should hold about 80% of them, and the 50% range about 50%. The ranges describe projects that do get a permit, so we check them on test projects that got one within four years and that we have been able to watch for four years. The chance of getting no permit at all is a separate number: it is what the odds measure.

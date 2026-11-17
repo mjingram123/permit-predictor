@@ -27,7 +27,7 @@ def plain_table(table, fill_values):
     for name in LOG_SCALED:
         numbers[name] = np.log1p(numbers[name])
     numbers = numbers.fillna(fill_values)
-    labels = pd.get_dummies(pd.DataFrame({name: table[name].astype(CATEGORY_TYPES[name]) for name in ["asset_class", "planning_area"]}), dtype=float)
+    labels = pd.get_dummies(pd.DataFrame({name: table[name].astype(CATEGORY_TYPES[name]) for name in ["building_type", "planning_area"]}), dtype=float)
     return pd.concat([numbers, labels], axis=1)
 
 
@@ -42,7 +42,7 @@ def score_days(actual, predicted):
     return {
         "RMSE (days)": np.sqrt(mean_squared_error(actual, predicted)),
         "typical miss (days)": np.median(np.abs(actual - predicted)),
-        "R squared": r2_score(actual, predicted),
+        "R²": r2_score(actual, predicted),
     }
 
 

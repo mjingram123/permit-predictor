@@ -9,6 +9,6 @@ cheat_results = score_odds(cheat_test, {"Cheating model": cheat_curves["Odds mod
 
 honest_scores = odds_results.xs("Odds model", level="method")["ranking score"]
 cheating_scores = cheat_results.xs("Cheating model", level="method")["ranking score"]
-leak_comparison = pd.DataFrame({"honest inputs only": honest_scores, "with city-filled columns": cheating_scores})
+leak_comparison = pd.DataFrame({"odds model, honest inputs": honest_scores, "cheating model": cheating_scores})
 leak_comparison["fake gain"] = leak_comparison.iloc[:, 1] - leak_comparison.iloc[:, 0]
 leak_comparison

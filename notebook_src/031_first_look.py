@@ -8,7 +8,7 @@ def summarize(table, by):
 
 
 two_years_old = projects[(DATA_DATE - projects.filed).dt.days >= 720]
-by_class = summarize(two_years_old, "asset_class")
+by_class = summarize(two_years_old, "building_type")
 by_year = summarize(two_years_old, "filing_year")
 display(by_class)
 display(by_year)

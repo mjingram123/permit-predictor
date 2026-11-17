@@ -32,4 +32,4 @@ projects["zone_base"] = zone_base.where(zone_base.isin(common_zones), "OTHER")
 projects["council_district"] = projects.cd.fillna("UNKNOWN").astype(str)
 projects["planning_area"] = projects.apc.fillna("UNKNOWN").astype(str)
 
-projects[["filed", "asset_class", "valuation", "stories", "units", "floor_area", "buildings_filed", "zone_base", "days_to_permit"]].head()
+projects[["filed", "building_type", "valuation", "stories", "units", "floor_area", "buildings_filed", "zone_base", "days_to_permit"]].head()

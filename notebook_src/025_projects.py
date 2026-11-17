@@ -31,7 +31,7 @@ projects = grouped.agg(
     prior_newbldg_issued=("prior_newbldg_issued", "max"),
     n_prior_permits_5y=("n_prior_permits_5y", "max"),
 )
-for column in ["permit_nbr", "primary_address", "zip_code", "asset_class", "zone", "cd", "apc", "work_desc"] + CITY_FILLED:
+for column in ["permit_nbr", "primary_address", "zip_code", "building_type", "zone", "cd", "apc", "work_desc"] + CITY_FILLED:
     projects[column] = largest_first[column].reindex(projects.index)
 
 early_reviews = permits[~permits.is_revision & permits.is_plan_check_only].copy()

@@ -1,6 +1,6 @@
 wide = {"description_width": "230px"}
 box_layout = widgets.Layout(width="460px")
-class_choice = widgets.Dropdown(options=list(CATEGORY_TYPES["asset_class"].categories), value="multifamily", description="Building type", style=wide, layout=box_layout)
+class_choice = widgets.Dropdown(options=list(CATEGORY_TYPES["building_type"].categories), value="multifamily", description="Building type", style=wide, layout=box_layout)
 valuation_box = widgets.IntText(value=15000000, description="Construction cost ($)", style=wide, layout=box_layout)
 stories_box = widgets.IntText(value=5, description="Stories", style=wide, layout=box_layout)
 units_box = widgets.IntText(value=60, description="Housing units (0 if none)", style=wide, layout=box_layout)
@@ -8,8 +8,8 @@ area_box = widgets.IntText(value=60000, description="Floor area (square feet)", 
 buildings_box = widgets.IntText(value=1, description="Buildings in the project", style=wide, layout=box_layout)
 zip_box = widgets.Text(value="90015", description="ZIP code", style=wide, layout=box_layout)
 zone_choice = widgets.Dropdown(options=["Typical for the ZIP code"] + list(CATEGORY_TYPES["zone_base"].categories), description="Zoning", style=wide, layout=box_layout)
-approval_choice = widgets.Dropdown(options=["None (by-right project)"] + list(entitlement_times.plain_name), description="Planning approval needed", style=wide, layout=box_layout)
-tick_boxes = {name: widgets.Checkbox(value=False, description=label, indent=False, layout=widgets.Layout(width="460px")) for name, label in TICK_BOXES.items()}
+approval_choice = widgets.Dropdown(options=[NO_APPROVAL] + list(entitlement_times.plain_name), description="Planning approval needed", style=wide, layout=box_layout)
+tick_boxes = {name: widgets.Checkbox(value=False, description=label, indent=False, layout=widgets.Layout(width="640px")) for name, label in TICK_BOXES.items()}
 estimate_button = widgets.Button(description="Estimate", button_style="primary")
 result_area = widgets.Output()
 

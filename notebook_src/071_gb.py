@@ -16,4 +16,4 @@ boosting_days = np.expm1(boosting_model.predict(tree_table(finished_test))).clip
 
 day_scores["Gradient Boosting"] = score_days(y_test, boosting_days)
 day_results = pd.DataFrame(day_scores).T
-day_results.round({"RMSE (days)": 0, "typical miss (days)": 0, "R squared": 3})
+day_results.round({"RMSE (days)": 0, "typical miss (days)": 0, "R²": 3})

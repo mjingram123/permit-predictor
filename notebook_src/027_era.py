@@ -24,7 +24,7 @@ NUMBERS = [
     "zone_conditions", "zone_overlay", "prior_demo_3y", "prior_grading_3y", "prior_newbldg_5y",
     "prior_newbldg_issued", "n_prior_permits_5y", "recent_quick_share", "recent_typical_wait",
 ] + list(DESCRIPTION_FLAGS)
-CATEGORIES = ["asset_class", "zone_base", "council_district", "planning_area"]
+CATEGORIES = ["building_type", "zone_base", "council_district", "planning_area"]
 CATEGORY_TYPES = {name: pd.CategoricalDtype(sorted(projects[name].unique())) for name in CATEGORIES}
 
 print(f"{len(NUMBERS) + len(CATEGORIES)} inputs per project, all known on filing day")

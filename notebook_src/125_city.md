@@ -1,3 +1,3 @@
-## The city keeps getting slower, and it is not only Los Angeles
+## The city has been getting slower, and it is not only Los Angeles
 
-We ran the same measurement on Seattle's open permit data. The share of new commercial and multifamily applications that had a permit within 24 months fell in both cities. This is why the odds in the chart above sit below the red line: a tool trained on the past is always a little optimistic when the future is slower.
+We ran the same measurement on Seattle's open permit data. The share of new commercial and multifamily applications that had a permit within 24 months fell in both cities. Seattle started much higher, fell through 2021 and has partly recovered since; Los Angeles fell and has stayed low. This chart counts every application separately, including each building of a multi-building project, so the Los Angeles line sits a little above the project figures earlier in the notebook. This is why the odds in the chart above sit below the red line: a tool trained on the past is always a little optimistic when the future is slower.

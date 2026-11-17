@@ -15,5 +15,5 @@ nn_model.fit(X_train_scaled, y_train)
 nn_days = np.expm1(nn_model.predict(X_test_scaled)).clip(0, MONTHS * 30)
 
 day_scores["Neural Network"] = score_days(y_test, nn_days)
-print("Neural Network RMSE:", round(day_scores["Neural Network"]["RMSE (days)"]))
-print("Neural Network R^2 Score:", round(day_scores["Neural Network"]["R squared"], 3))
+print("Neural Network RMSE (days):", round(day_scores["Neural Network"]["RMSE (days)"]))
+print("Neural Network R² Score:", round(day_scores["Neural Network"]["R²"], 3))

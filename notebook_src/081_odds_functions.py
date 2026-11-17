@@ -17,18 +17,21 @@ def waiting_months(table, waited, has_permit):
     counts = last_month + 1
     project = np.repeat(np.arange(len(table)), counts)
     months_waited = np.concatenate([np.arange(count) for count in counts])
+    is_last_month = months_waited == np.repeat(last_month, counts)
     arrived = has_permit & (waited < MONTHS * 30)
-    permit_came = ((months_waited == np.repeat(last_month, counts)) & np.repeat(arrived, counts)).astype(int)
+    permit_came = (is_last_month & np.repeat(arrived, counts)).astype(int)
+    part_of_month_seen = np.where(has_permit | (waited >= MONTHS * 30), 1.0, (waited % 30) / 30)
+    exposure = np.where(is_last_month, np.repeat(part_of_month_seen, counts), 1.0)
     calendar_date = table.filed.values[project] + (months_waited * 30).astype("timedelta64[D]")
-    return project, months_waited, permit_came, calendar_date
+    return project, months_waited, permit_came, calendar_date, exposure
 
 
 def fit_odds_model(table, waited, has_permit, extra=()):
-    project, months_waited, permit_came, calendar_date = waiting_months(table, waited, has_permit)
+    project, months_waited, permit_came, calendar_date, exposure = waiting_months(table, waited, has_permit)
     rows = tree_table(table, extra).iloc[project].reset_index(drop=True)
     rows["months_waited"] = months_waited
     model = lgb.LGBMClassifier(**odds_settings)
-    model.fit(rows, permit_came)
+    model.fit(rows, permit_came, sample_weight=np.maximum(exposure, 0.000001))
     return model
 
 
@@ -41,19 +44,19 @@ def permit_curves(model, table, extra=()):
 
 
 def track_record(table, waited, has_permit, cutoff):
-    project, months_waited, permit_came, calendar_date = waiting_months(table, waited, has_permit)
+    project, months_waited, permit_came, calendar_date, exposure = waiting_months(table, waited, has_permit)
     last_two_years = calendar_date >= np.datetime64(cutoff - pd.Timedelta(days=730))
-    building_type = table.asset_class.values[project]
+    building_type = table.building_type.values[project]
 
     def monthly_chance(chosen):
-        waiting = np.bincount(months_waited[chosen], minlength=MONTHS).astype(float)
+        waiting = np.bincount(months_waited[chosen], weights=exposure[chosen], minlength=MONTHS)
         permits = np.bincount(months_waited[chosen], weights=permit_came[chosen], minlength=MONTHS)
-        return permits / np.maximum(waiting, 1), waiting
+        return np.minimum(permits / np.maximum(waiting, 1), 1), waiting
 
     all_types, waiting = monthly_chance(last_two_years)
     all_types = pd.Series(np.where(waiting >= 5, all_types, np.nan)).ffill().fillna(0).values
     curves = {}
-    for name in CATEGORY_TYPES["asset_class"].categories:
+    for name in CATEGORY_TYPES["building_type"].categories:
         own, waiting = monthly_chance(last_two_years & (building_type == name))
         trust = np.minimum(waiting / 150, 1)
         curves[name] = 1 - np.cumprod(1 - (trust * own + (1 - trust) * all_types))
@@ -79,7 +82,7 @@ def score_odds(table, curves):
                 "actual share": actual.mean(),
                 "average odds given": chance.mean(),
                 "ranking score": roc_auc_score(actual, chance),
-                "error": np.mean((chance - actual) ** 2),
+                "odds error": np.mean((chance - actual) ** 2),
             })
     return pd.DataFrame(rows).set_index(["permit within", "method"]).round(3)
 
@@ -94,7 +97,8 @@ def typical_days(curves):
 
 
 def range_holds(table, curves, low, high):
-    finished = (table.days_to_permit <= MONTHS * 30).values
+    watched_four_years = ((DATA_DATE - table.filed).dt.days >= MONTHS * 30).values
+    finished = (table.days_to_permit <= MONTHS * 30).values & watched_four_years
     actual = table.days_to_permit.values[finished]
     earliest = (month_reached(curves, low)[finished] - 1) * 30
     latest = month_reached(curves, high)[finished] * 30
@@ -106,7 +110,7 @@ def backtest(last_training_year, test_years, extra=()):
     waited, has_permit = as_known_on(train, cutoff)
     model = fit_odds_model(train, waited, has_permit, extra)
     curves = {
-        "Track record": track_record_curves(train, waited, has_permit, cutoff, test.asset_class),
+        "Track record": track_record_curves(train, waited, has_permit, cutoff, test.building_type),
         "Odds model": permit_curves(model, test, extra),
     }
     curves["Blend"] = (curves["Track record"] + curves["Odds model"]) / 2

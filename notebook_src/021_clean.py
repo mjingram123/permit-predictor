@@ -60,7 +60,7 @@ OFFICE = r"OFFICE|MEDICAL|CLINIC|BANK"
 RETAIL = r"RETAIL|RESTAURANT|MARKET|STORE|SHOP|CAR WASH|GAS STATION|DRIVE.?THR|DEALERSHIP|CAFE|COMMERCIAL BUILDING|\bBAR\b|FOOD"
 
 
-def asset_class(text, sub_type):
+def building_type(text, sub_type):
     if re.search(MIXED_USE, text):
         return "mixed-use"
     if re.search(CARE_HOME, text):
@@ -87,7 +87,7 @@ def asset_class(text, sub_type):
 permits["is_revision"] = permits.permit_nbr.str.split("-").str[1].str[-4:] != "0000"
 permits["is_plan_check_only"] = permits.text.str.contains(PLAN_CHECK_ONLY, regex=True)
 permits["is_small_structure"] = permits.text.map(is_small_structure)
-permits["asset_class"] = [asset_class(text, sub_type) for text, sub_type in zip(permits.text, permits.permit_sub_type)]
+permits["building_type"] = [building_type(text, sub_type) for text, sub_type in zip(permits.text, permits.permit_sub_type)]
 
 steps = pd.Series({
     "applications downloaded": len(permits),
