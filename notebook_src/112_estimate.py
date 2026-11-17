@@ -74,6 +74,12 @@ def print_estimate(building_type, valuation, stories, units, floor_area, buildin
     print()
     print("After the permit: construction")
     print(f"   typically {build.median_months:.0f} months from permit to certificate of occupancy; the middle half took {build.p25_months:.0f} to {build.p75_months:.0f} months")
+    print()
+    print("What this estimate covers")
+    print("   The building permit only. Demolition, grading and other departments' sign-offs happen within that wait,")
+    print("   and electrical, mechanical and plumbing permits come during construction.")
+    print("   A planning approval, if the project needs one, typically adds about 6 to 7 months before the permit")
+    print("   (Gabriel and Kung, UCLA Anderson, 2024, multifamily projects), and construction adds about 1.5 to 3 years after it.")
 
     months = np.arange(1, MONTHS + 1)
     plt.figure(figsize=(8, 4))
