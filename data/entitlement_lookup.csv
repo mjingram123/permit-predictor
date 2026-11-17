@@ -1,0 +1,11 @@
+code,plain_name,n_cases,p25_days,median_days,p75_days,p90_days
+CPC,City Planning Commission decision,293,330,574,1316,2100
+DIR,Director of Planning decision,2056,155,271,492,922
+ZA,Zoning Administrator decision,1811,223,353,648,1113
+VTT/TT,Tract map (vesting tentative or tentative tract),71,378,630,1234,1815
+TOC,Transit-oriented incentive (TOC),523,194,321,518,890
+DB,Density bonus,190,248,397,662,1106
+SPR,Site plan review,354,272,482,1016,1779
+CU/CUB,"Conditional use permit (including alcohol, CUB)",923,210,306,544,918
+ZC,Zone change,60,481,700,1165,1845
+GPA,General plan amendment,40,638,1141,1733,2231

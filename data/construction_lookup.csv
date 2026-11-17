@@ -1,0 +1,8 @@
+asset_class,n_permits,p25_months,median_months,p75_months,share_with_cofo
+multifamily,1498,20.0,28.3,39.1,0.895
+mixed-use,228,30.3,37.2,47.2,0.867
+office,195,10.2,19.4,33.4,0.7
+retail,304,14.0,22.6,34.4,0.806
+industrial,148,12.6,24.2,42.9,0.688
+hotel,18,32.2,38.3,56.2,0.667
+other commercial,395,11.4,19.4,32.0,0.75

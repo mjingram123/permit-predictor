@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+data/raw/
+deliverable/
+notebook_src/001_team.md
+.DS_Store
+cache/
