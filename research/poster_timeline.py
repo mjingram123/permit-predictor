@@ -1,0 +1,31 @@
+row = describe_project("multifamily", 15000000, 5, 60, 60000, 1, "90015", "Typical for the ZIP code", ["affordable_housing", "underground_parking", "wood_frame"])
+blend, model_curve, record_curve = blended_curve(row)
+optimistic, middle, pessimistic = (month_reached(blend[None, :], share)[0] for share in (0.25, 0.5, 0.75))
+build = construction_times[construction_times.building_type == "multifamily"].iloc[0]
+approval_months = 6.5
+
+fig, ax = plt.subplots(figsize=(14, 4.6))
+ax.barh(2, approval_months, left=-approval_months, color="#c7c7c7", edgecolor="gray", hatch="//", height=0.55)
+ax.barh(1, middle, left=0, color="#2ca02c", height=0.55)
+ax.plot([optimistic, pessimistic], [1, 1], color="black", linewidth=2.5, marker="|", markersize=16, markeredgewidth=2.5)
+ax.barh(0, build.median_months, left=middle, color="#1f77b4", height=0.55)
+ax.plot([middle + build.p25_months, middle + build.p75_months], [0, 0], color="black", linewidth=2.5, marker="|", markersize=16, markeredgewidth=2.5)
+
+ax.text(1.5, 2, "about 6 to 7 months, only if the project needs one; it can overlap with the permit review", va="center", fontsize=11)
+ax.text(middle / 2, 1.42, f"middle estimate: month {middle}", ha="center", fontsize=12)
+ax.text(pessimistic + 1.5, 1, f"1 in 4 are faster than month {optimistic}, 1 in 4 slower than month {pessimistic}", va="center", fontsize=11)
+ax.text(middle + build.median_months / 2, 0.42, f"typically {build.median_months:.0f} months", ha="center", fontsize=12)
+ax.text(middle + build.p75_months + 1.5, 0, f"middle half: {build.p25_months:.0f} to {build.p75_months:.0f} months", va="center", fontsize=11)
+
+ax.set_yticks([2, 1, 0])
+ax.set_yticklabels(["Planning approval", "Building permit\n(what our tool estimates)", "Construction"], fontsize=13)
+ax.axvline(0, color="black", linewidth=1)
+ax.set_xlim(-9, 92)
+ax.set_ylim(-0.6, 2.85)
+ax.set_xlabel("Months after plans are filed with the building department", fontsize=12)
+ax.set_title(f"From filing to an open building: a new 60-unit apartment project that gets its permit\n(only {blend[23]:.0%} of projects like it have the permit within 24 months, and {blend[-1]:.0%} within 4 years)", fontsize=13)
+ax.grid(axis="y", visible=False)
+plt.tight_layout()
+fig.savefig(FIGURES / "poster_timeline.png", dpi=200, bbox_inches="tight")
+plt.close("all")
+print("timeline months", optimistic, middle, pessimistic, "| odds", [round(float(blend[m - 1]), 3) for m in (12, 24, 36, 48)], "| build", build.p25_months, build.median_months, build.p75_months)

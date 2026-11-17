@@ -40,6 +40,7 @@ for path in sorted((root / "notebook_src").glob("*.py")):
         for number in plt.get_fignums():
             plt.figure(number).savefig(root / "figures" / f"{path.stem}_{number}.png", dpi=200, bbox_inches="tight")
         plt.close("all")
-extra = root / "research" / "after_cells.py"
-if len(sys.argv) > 2 and extra.exists():
+if len(sys.argv) > 2:
+    extra = pathlib.Path(sys.argv[2]).resolve()
+    namespace["FIGURES"] = root / "figures"
     exec(compile(extra.read_text(), str(extra), "exec"), namespace)
